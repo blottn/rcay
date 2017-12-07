@@ -43,7 +43,7 @@ public class Rcay {
 					double fog_dist = 70.0;
 					// d = 0, h = height;
 					// d = 70, h = min_h;
-					
+
 					double min = 50;
 					double delta = (height - min) / 2;
 					double h = delta * (result.dist/ fog_dist);		// amount to remove from top
@@ -100,6 +100,4 @@ public class Rcay {
 			this.dist = d;
 		}
 	}
-
-
 }
