@@ -7,16 +7,16 @@ import java.awt.Color;
 import java.util.*;
 
 public class Rcay {
+
+		static final Color floor_col = Color.GRAY;
+		static final Color roof_col = Color.BLACK;
+		static final Color fog_col = Color.GREEN;
+		static final int width = 1000;
+		static final int height = 500;
+		static final double fog_h = 70;
+		static final double fov = 90;
+
 	public static void main(String[] args) throws Exception {
-
-		final Color floor_col = Color.GRAY;
-		final Color roof_col = Color.BLACK;
-		final Color fog_col = Color.GREEN;
-		final int width = 1000;
-		final int height = 500;
-		final double fog_h = 70;
-		final double fov = 90;
-
 		String title = "Rcay";
 
 		ArrayList<Entity> ents = new ArrayList<Entity>();
@@ -32,42 +32,7 @@ public class Rcay {
 			@Override
 			public void paint(Graphics g) {
 				super.paint(g);
-
-				//do floor
-				g.setColor(floor_col);
-				g.fillRect(0,height / 2, width, height / 2);
-
-				//do ceiling
-				g.setColor(roof_col);
-				g.fillRect(0,0,width,height / 2);
-
-				//do fog
-				g.setColor(fog_col);
-				int fog_delta = (int) height - (int)fog_h;
-				fog_delta /= 2;
-
-				g.fillRect(0,fog_delta,width,height - 2*fog_delta);
-
-				// calculate degrees per pixel
-				double degPP = fov / width;
-
-				for (double i = 0 ; i < width ; i ++) {
-					double deg = (i - (width / 2)) * degPP;
-					for (Entity ent : world.ents) {
-						RayIntercept result = world.cast(Math.tan(Math.toRadians(deg)),Math.tan(Math.toRadians(4*degPP / 2)),ent);
-						if (result != null) {
-							g.setColor(result.res);
-						
-							//height proportional to dist
-							double fog_dist = 70.0;
-							double min = 50;
-							double delta = (height - min) / 2;
-							double h = delta * (result.dist/ fog_dist);		// amount to remove from top
-							g.fillRect((int)i, (int)h, 1, (int) ((height) - (2*h)));
-						}
-					}
-				}
-				System.out.println("a splash of paint");
+				render(g,world);
 			};
 		};
 		frame.setSize(width,height);
@@ -75,6 +40,41 @@ public class Rcay {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
+	public static void render(Graphics g, World world) {
+		//do floor
+		g.setColor(floor_col);
+		g.fillRect(0,height / 2, width, height / 2);
+
+		//do ceiling
+		g.setColor(roof_col);
+		g.fillRect(0,0,width,height / 2);
+
+		//do fog
+		g.setColor(fog_col);
+		int fog_delta = (int) height - (int)fog_h;
+		fog_delta /= 2;
+
+		g.fillRect(0,fog_delta,width,height - 2*fog_delta);
+
+		// calculate degrees per pixel
+		double degPP = fov / width;
+		for (double i = 0 ; i < width ; i ++) {
+			double deg = (i - (width / 2)) * degPP;
+			for (Entity ent : world.ents) {
+				RayIntercept result = world.cast(Math.tan(Math.toRadians(deg)),Math.tan(Math.toRadians(4*degPP / 2)),ent);
+				if (result != null) {
+					g.setColor(result.res);
+						
+					//height proportional to dist
+					double fog_dist = 70.0;
+					double min = 50;
+					double delta = (height - min) / 2;
+					double h = delta * (result.dist/ fog_dist);		// amount to remove from top
+					g.fillRect((int)i, (int)h, 1, (int) ((height) - (2*h)));
+				}
+			}
+		}
+	}
 
 	public static class World {
 		
