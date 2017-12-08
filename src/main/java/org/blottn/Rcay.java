@@ -28,16 +28,20 @@ public class Rcay {
 		final World world = new World(ents);
 		world.setPos(0,0);
 
-		JFrame frame = new JFrame(title) {
-			@Override
-			public void paint(Graphics g) {
-				super.paint(g);
-				render(g,world);
-			};
-		};
+		JFrame frame = new JFrame(title);
 		frame.setSize(width,height);
 		frame.show();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		while(true) {
+			try {
+				Thread.sleep(5);
+			}
+			catch (Exception e) {
+				System.exit(1);
+			}
+			render(frame.getGraphics(),world);
+			world.yPos = world.yPos + 0.01;
+		}
 	}
 
 	public static void render(Graphics g, World world) {
@@ -62,9 +66,8 @@ public class Rcay {
 			double deg = (i - (width / 2)) * degPP;
 			for (Entity ent : world.ents) {
 				RayIntercept result = world.cast(Math.tan(Math.toRadians(deg)),Math.tan(Math.toRadians(4*degPP / 2)),ent);
-				if (result != null) {
+				if (result != null) {	//hit something
 					g.setColor(result.res);
-						
 					//height proportional to dist
 					double fog_dist = 70.0;
 					double min = 50;
@@ -80,7 +83,7 @@ public class Rcay {
 		
 		public Color fog = Color.GREEN;
 
-		int xPos, yPos;	//render from here
+		public double xPos, yPos;	//render from here
 
 		double bX;
 	   	double bY;
@@ -101,7 +104,10 @@ public class Rcay {
 
 		public RayIntercept cast(double relang, double er, Entity e) {
 			double fog_dist = 70;
-			if (e.posY / e.posX + er > relang && e.posY / e.posX - er < relang) {
+			//relx and y
+			double relx = e.posX - xPos;
+			double rely = e.posY - yPos;
+			if (rely / relx + er > relang && rely / relx - er < relang) {
 				// calculate distance
 				double relX,relY;
 				relX = Math.abs(e.posX - xPos);
