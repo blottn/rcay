@@ -5,6 +5,8 @@ import java.awt.Graphics;
 import java.awt.Color;
 
 import java.util.*;
+import java.awt.image.BufferedImage;
+import java.awt.Graphics2D;
 
 public class Rcay {
 
@@ -32,6 +34,7 @@ public class Rcay {
 		frame.setSize(width,height);
 		frame.show();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 		while(true) {
 			try {
 				Thread.sleep(5);
@@ -45,20 +48,24 @@ public class Rcay {
 	}
 
 	public static void render(Graphics g, World world) {
+
+		BufferedImage frame = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
+		Graphics2D graphics = frame.createGraphics();
+
 		//do floor
-		g.setColor(floor_col);
-		g.fillRect(0,height / 2, width, height / 2);
+		graphics.setColor(floor_col);
+		graphics.fillRect(0,height / 2, width, height / 2);
 
 		//do ceiling
-		g.setColor(roof_col);
-		g.fillRect(0,0,width,height / 2);
+		graphics.setColor(roof_col);
+		graphics.fillRect(0,0,width,height / 2);
 
 		//do fog
-		g.setColor(fog_col);
+		graphics.setColor(fog_col);
 		int fog_delta = (int) height - (int)fog_h;
 		fog_delta /= 2;
 
-		g.fillRect(0,fog_delta,width,height - 2*fog_delta);
+		graphics.fillRect(0,fog_delta,width,height - 2*fog_delta);
 
 		// calculate degrees per pixel
 		double degPP = fov / width;
@@ -67,16 +74,17 @@ public class Rcay {
 			for (Entity ent : world.ents) {
 				RayIntercept result = world.cast(Math.tan(Math.toRadians(deg)),Math.tan(Math.toRadians(4*degPP / 2)),ent);
 				if (result != null) {	//hit something
-					g.setColor(result.res);
+					graphics.setColor(result.res);
 					//height proportional to dist
 					double fog_dist = 70.0;
 					double min = 50;
 					double delta = (height - min) / 2;
 					double h = delta * (result.dist/ fog_dist);		// amount to remove from top
-					g.fillRect((int)i, (int)h, 1, (int) ((height) - (2*h)));
+					graphics.fillRect((int)i, (int)h, 1, (int) ((height) - (2*h)));
 				}
 			}
 		}
+		g.drawImage(frame,0,0,null);
 	}
 
 	public static class World {
