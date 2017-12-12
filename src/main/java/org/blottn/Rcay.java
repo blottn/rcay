@@ -34,16 +34,14 @@ public class Rcay {
 		frame.setSize(width,height);
 		frame.show();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		while(true) {
+		while (true) {
 			try {
 				Thread.sleep(5);
-			}
-			catch (Exception e) {
-				System.exit(1);
+			} catch(Exception e) {
+
 			}
 			render(frame.getGraphics(),world);
-			world.yPos = world.yPos + 0.01;
+			world.yPos = world.yPos + 0.05;
 		}
 	}
 
@@ -61,7 +59,7 @@ public class Rcay {
 		graphics.fillRect(0,0,width,height / 2);
 
 		//do fog
-		graphics.setColor(fog_col);
+	/*	graphics.setColor(fog_col);*/
 		int fog_delta = (int) height - (int)fog_h;
 		fog_delta /= 2;
 
@@ -71,18 +69,23 @@ public class Rcay {
 		double degPP = fov / width;
 		for (double i = 0 ; i < width ; i ++) {
 			double deg = (i - (width / 2)) * degPP;
+			RayIntercept result = new RayIntercept(Color.WHITE,100);
 			for (Entity ent : world.ents) {
-				RayIntercept result = world.cast(Math.tan(Math.toRadians(deg)),Math.tan(Math.toRadians(4*degPP / 2)),ent);
-				if (result != null) {	//hit something
-					graphics.setColor(result.res);
-					//height proportional to dist
-					double fog_dist = 70.0;
-					double min = 50;
-					double delta = (height - min) / 2;
-					double h = delta * (result.dist/ fog_dist);		// amount to remove from top
-					graphics.fillRect((int)i, (int)h, 1, (int) ((height) - (2*h)));
+				RayIntercept current = world.cast(Math.tan(Math.toRadians(deg)),Math.tan(Math.toRadians(4*degPP / 2)),ent);
+				if (current == null) {
+					result = current;
+				}
+				else if (current.dist < result.dist) {
+					result = current;
 				}
 			}
+			graphics.setColor(result.res);
+			//height proportional to dist
+			double fog_dist = 110.0;
+			double min = 90;
+			double delta = (height - min) / 2;
+			double h = delta * (result.dist/ fog_dist);		// amount to remove from top
+			graphics.fillRect((int)i, (int)h, 1, (int) ((height) - (2*h)));
 		}
 		g.drawImage(frame,0,0,null);
 	}
@@ -124,7 +127,7 @@ public class Rcay {
 				return new RayIntercept(Color.RED, dist);
 			}
 			else {
-				return null;
+				return new RayIntercept(Color.WHITE, 100);
 			}
 		}
 
