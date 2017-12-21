@@ -117,22 +117,13 @@ public class Rcay {
 		double degPP = fov / width;
 		for (double i = 0 ; i < width ; i ++) {
 			double deg = (i - (width / 2)) * degPP;
-			RayIntercept result = new RayIntercept(Color.WHITE,100);
-			for (Entity ent : world.ents) {
-				RayIntercept current = world.cast(Math.tan(Math.toRadians(deg)),Math.tan(Math.toRadians(4*degPP / 2)),ent);
-				if (current == null) {
-					result = current;
-				}
-				else if (current.dist < result.dist) {
-					result = current;
-				}
-			}
-			graphics.setColor(result.res);
+			RayIntercept ray = world.trace(Math.tan(Math.toRadians(deg)),Math.tan(Math.toRadians(4*degPP / 2)));
+			graphics.setColor(ray.res);
 			//height proportional to dist
 			double fog_dist = 110.0;
 			double min = 90;
 			double delta = (height - min) / 2;
-			double h = delta * (result.dist/ fog_dist);		// amount to remove from top
+			double h = delta * (ray.dist/ fog_dist);		// amount to remove from top
 			graphics.fillRect((int)i, (int)h, 1, (int) ((height) - (2*h)));
 		}
 		g.drawImage(frame,0,0,null);
@@ -161,7 +152,18 @@ public class Rcay {
 			this.yPos = y;
 		}
 
-		public RayIntercept cast(double relang, double er, Entity e) {
+		public RayIntercept trace(double relang, double er) {
+			RayIntercept result = new RayIntercept(Color.WHITE,100);	//worst case returns fog
+			for (Entity ent: ents) {
+				RayIntercept current = this.check(relang,er, ent);
+				if (current.dist < result.dist) {
+					result = current;
+				}
+			}
+			return result;
+		}
+
+		private RayIntercept check(double relang, double er, Entity e) {
 			double fog_dist = 70;
 			//relx and y
 			double relx = e.posX - xPos;
