@@ -5,7 +5,7 @@ import java.util.*;
 
 public class World {
 	
-	public Color fog - Color.GREEN;
+	public Color fog = Color.GREEN;
 
 	public double xPos, yPos;	//render from here
 
@@ -36,7 +36,7 @@ public class World {
 		return result;
 	}
 
-	private RayIntercept check(double relang, double er, Entity er) {
+	private RayIntercept check(double relang, double er, Entity e) {
 		double fog_dist = 70;
 		
 		double relx = e.posX - xPos;
@@ -45,8 +45,8 @@ public class World {
 		if (rely / relx + er > relang && rely / relx - er < relang) {
 			// calculate distance
 			double absRelX = Math.abs(relx);
-			double absRely = Math.abs(rely);
-			double dist = Math.sqrt((relX*relX) + (relY*relY));
+			double absRelY = Math.abs(rely);
+			double dist = Math.sqrt((absRelX*absRelX) + (absRelY*absRelY));
 			return new RayIntercept(Color.RED, dist);
 		}
 		else {
