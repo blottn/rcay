@@ -28,12 +28,12 @@ public class World {
 
 	}
 
-//	public RayIntercept trace(double relang, double er) {
-	public RayIntercept trace(Ray ray) {	//fog is 100 units away
+	public RayIntercept trace(double relang, double er) {
+//	public RayIntercept trace(Ray ray) {	//fog is 100 units away		// this is what i want to use in future
 		RayIntercept result = new RayIntercept(Color.WHITE, 100); 	//return fog in worst case
 		for (Entity ent: ents) {
-			//RayIntercept current = ent.check(relang, er, cameraPos);
-			RayIntercept current = ent.fancyCheck(ray);
+			RayIntercept current = ent.check(relang, er, cameraPos);
+			//RayIntercept current = ent.fancyCheck(ray);
 			
 			if (current.dist < result.dist) {
 				result = current;

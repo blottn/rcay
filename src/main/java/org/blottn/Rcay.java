@@ -41,7 +41,7 @@ public class Rcay {
 
 		Listener listener = new Listener(world);
 
-		world.setPos(0,0);
+		world.setPos(0,0,50);
 
 		JFrame frame = new JFrame(title);
 		frame.setSize(width,height);
