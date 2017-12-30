@@ -7,19 +7,19 @@ public class World {
 	
 	public Color fog = Color.GREEN;
 
-	public double xPos, yPos;	//render from here
-	public Point cameraPos;
+	public Point3D cameraPos;	//render from here
 
 	List<Entity> ents;
 
 	public World(List<Entity> ents) {
 		this.ents = ents;
-		cameraPos = new Point();
+		cameraPos = new Point3D();
 	}
 
-	public void setPos(double x, double y) {
+	public void setPos(double x, double y, double z) {
 		cameraPos.setX(x);
 		cameraPos.setY(y);
+		cameraPos.setZ(z);
 	}
 
 	public void moveBy(double x, double y) {
@@ -28,10 +28,13 @@ public class World {
 
 	}
 
-	public RayIntercept trace(double relang, double er) {
+//	public RayIntercept trace(double relang, double er) {
+	public RayIntercept trace(Ray ray) {	//fog is 100 units away
 		RayIntercept result = new RayIntercept(Color.WHITE, 100); 	//return fog in worst case
 		for (Entity ent: ents) {
-			RayIntercept current = ent.check(relang, er, cameraPos);
+			//RayIntercept current = ent.check(relang, er, cameraPos);
+			RayIntercept current = ent.fancyCheck(ray);
+			
 			if (current.dist < result.dist) {
 				result = current;
 			}

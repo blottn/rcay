@@ -2,7 +2,7 @@ package org.blottn;
 
 public class Tri {
 	
-	Point3D a,b,c;		// edges are [ab] [bc] [ca]
+	public Point3D a,b,c;		// edges are [ab] [bc] [ca]
 
 	public Tri() {
 		a = new Point3D();

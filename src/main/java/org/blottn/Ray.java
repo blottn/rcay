@@ -8,11 +8,12 @@ public class Ray {
 
 	double offset;
 	
-	Vector3D direction;
-
+	public Vector3D direction;
 
 	public Ray() {
 		offset = 0;
 		direction = new Vector3D();
 	}
+
+
 }
