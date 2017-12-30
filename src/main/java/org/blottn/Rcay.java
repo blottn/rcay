@@ -84,9 +84,7 @@ public class Rcay {
 					}
 				}
 			}
-			
-			world.xPos += movement[0];
-			world.yPos += movement[1];
+			world.moveBy(movement[0], movement[1]);		
 
 			listener.inputs.clear();
 			render(frame.getGraphics(),world);
