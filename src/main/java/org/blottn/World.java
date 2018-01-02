@@ -22,10 +22,22 @@ public class World {
 		cameraPos.setZ(z);
 	}
 
-	public void moveBy(double x, double y) {
+	public void moveBy(double x, double z) {
 		cameraPos.setX(cameraPos.getX() + x);
-		cameraPos.setY(cameraPos.getY() + y);
+		cameraPos.setZ(cameraPos.getZ() + z);
 
+	}
+
+	public List<Entity> select(double horizDegrees) {
+		List<Entity> out = new ArrayList<Entity>();
+		//create ray
+		for (Entity ent : ents) {
+			if (ent.overlaps(horizDegrees, cameraPos)) {
+				out.add(ent);
+			}
+		}
+
+		return out;
 	}
 
 	public RayIntercept trace(double relang, double er) {

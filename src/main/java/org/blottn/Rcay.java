@@ -18,7 +18,9 @@ public class Rcay {
 		static final int width = 1000;
 		static final int height = 500;
 		static final double fog_h = 70;
-		static final double fov = 90;
+
+		static final double horiz_fov = 90;
+		static final double vert_fov = 50;
 
 	public static void main(String[] args) throws Exception {
 
@@ -28,20 +30,20 @@ public class Rcay {
 
 		ArrayList<Entity> ents = new ArrayList<Entity>();
 		ents.add(new Entity(95,10));
-		ents.add(new Entity(50,0));
+/*		ents.add(new Entity(50,0));
 		ents.add(new Entity(10,-30));
 		ents.add(new Entity(20,-50));
 		ents.add(new Entity(50,-10));
 		ents.add(new Entity(70,-25));
 		ents.add(new Entity(10,0));
-		ents.add(new Entity(22,-20));
+		ents.add(new Entity(22,-20));*/
 
 
 		final World world = new World(ents);
 
 		Listener listener = new Listener(world);
 
-		world.setPos(0,0,50);
+		world.setPos(-20,5,0);
 
 		JFrame frame = new JFrame(title);
 		frame.setSize(width,height);
@@ -112,8 +114,26 @@ public class Rcay {
 		graphics.fillRect(0,fog_delta,width,height - 2*fog_delta);
 
 		// calculate degrees per pixel
-		double degPP = fov / width;
+		double horiz_degPP = horiz_fov / width;
+		double vert_degPP = vert_fov / height;
+
+		for (double i = 0; i < width ; i++) {
+			double horiz_deg = (i - (width / 2)) * horiz_degPP;
+			List<Entity> selected = world.select(Math.tan(Math.toRadians(horiz_deg)));
+			if (!selected.isEmpty()) {
+				for (int j = 0 ; j < height ; j++) {
+					
+				}
+
+				graphics.setColor(Color.BLUE);
+				graphics.fillRect((int) i, 0, 1, height);
+			}
+		}
+
+		/*
+		double degPP = horiz_fov / width;
 		for (double i = 0 ; i < width ; i ++) {
+			for (double j = 
 			double deg = (i - (width / 2)) * degPP;
 			RayIntercept ray = world.trace(Math.tan(Math.toRadians(deg)),Math.tan(Math.toRadians(4*degPP / 2)));
 			graphics.setColor(ray.res);
@@ -124,6 +144,7 @@ public class Rcay {
 			double h = delta * (ray.dist/ fog_dist);		// amount to remove from top
 			graphics.fillRect((int)i, (int)h, 1, (int) ((height) - (2*h)));
 		}
+		*/
 		g.drawImage(frame,0,0,null);
 	}
 

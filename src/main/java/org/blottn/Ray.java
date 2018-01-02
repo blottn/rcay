@@ -6,13 +6,13 @@ package org.blottn;
 
 public class Ray {
 
-	double offset;
+	public Point origin;
 	
-	public Vector3D direction;
+	public Vector direction;
 
-	public Ray() {
-		offset = 0;
-		direction = new Vector3D();
+	public Ray(Point origin) {
+		this.origin = origin;
+		direction = new Vector();
 	}
 
 

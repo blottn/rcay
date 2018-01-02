@@ -16,4 +16,15 @@ public class Point3D extends Point {
 	public void setZ(double newZ) {
 		this.z = newZ;
 	}
+
+	public void set(double newX, double newY, double newZ) {
+		this.setX(newX);
+		this.setY(newY);
+		this.setZ(newZ);
+	}
+	
+	@Override
+	public String toString() {
+		return "[x:" + x + ", y:" + y + ", z:" + z + "]";
+	}
 }

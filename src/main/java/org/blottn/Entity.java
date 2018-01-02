@@ -13,17 +13,32 @@ public class Entity {
 		shape = new ArrayList<Tri>();
 		posX = x;
 		posY = y;
-
+		
 		DEBUG();
 	}
 
 	private void DEBUG() {
 		Tri debugFace = new Tri();
+		
+		debugFace.a.set(15,0,2);
+		debugFace.b.set(15,0,-2);
+		debugFace.c.set(15,2,0);
+
 		addFace(debugFace);
 	}
 
 	public void addFace(Tri face) {
 		shape.add(face);
+	}
+
+	
+	public boolean overlaps(double relang, Point3D origin) {
+		for (Tri tri : shape) {
+			if (tri.overlaps(relang, origin)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public RayIntercept fancyCheck(Ray ray) {
