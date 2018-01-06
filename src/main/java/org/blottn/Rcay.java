@@ -121,12 +121,13 @@ public class Rcay {
 			double horiz_deg = (i - (width / 2)) * horiz_degPP;
 			List<Entity> selected = world.select(Math.tan(Math.toRadians(horiz_deg)));
 			if (!selected.isEmpty()) {
-				for (int j = 0 ; j < height ; j++) {
-					
-				}
 
 				graphics.setColor(Color.BLUE);
-				graphics.fillRect((int) i, 0, 1, height);
+				for (double j = 0 ; j < height ; j++) {
+					
+					graphics.fillRect((int) i,(int) j , 1, 1);
+				}
+
 			}
 		}
 
